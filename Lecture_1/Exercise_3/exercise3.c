@@ -16,7 +16,7 @@ double read_param(const char *msg)
 	lch=*p;
 	free(buff);
 	if(lch)
-	    printf("\tPlease enter numeric value.\n\t? = ");
+	    printf("\t>>> Please enter numeric value.\n\t? = ");
 	else break;
     }
     return res;
@@ -27,8 +27,16 @@ int main(void)
     double h,w;
     const double scale=100./2.54;
     printf("Input parameters.\n");
-    h=read_param("Enter height (m): ");
-    w=read_param("Enter weight (m): ");
+    do{
+	h=read_param("Enter height (m): ");
+	if(h<0)
+	    printf("\t>>> Height mast be positive.\n");
+    }while(h<0);
+    do{
+	w=read_param("Enter weight (m): ");
+	if(w<0)
+	    printf("\t>>> Weight mast be positive.\n");
+    }while(w<0);
     printf("Results:\n"
 	   "\tPerimeter (in inches) is %lg\n"
 	   "\tArea (in inches) is %lg\n",
