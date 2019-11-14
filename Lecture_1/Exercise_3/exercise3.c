@@ -39,7 +39,7 @@ int main(void)
     }while(w<0);
     printf("Results:\n"
 	   "\tPerimeter (in inches) is %lg\n"
-	   "\tArea (in inches) is %lg\n",
+	   "\tArea (in square inches) is %lg\n",
 	   2.*(h+w)*scale, h*w*scale*scale
 	);
     return 0;
