@@ -1,0 +1,1 @@
+Write program that get from user height and weight of rectangle (in meters) and calculate perimeter and area (in inches);
