@@ -1,0 +1,1 @@
+Write function that converts RGB 888 to RGB 565.
