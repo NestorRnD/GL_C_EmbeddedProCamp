@@ -68,7 +68,7 @@ void ListIterate(const TptrList head, TLISTDATA (*fdapply)(TLISTDATA))
 }
 
 //!!!!!!!!!!!!!!
-TptrList *ListFind();
+TptrList *ListFind(const TptrList head, int );
 
 TLISTDATA PrintData(TLISTDATA d)
 {
