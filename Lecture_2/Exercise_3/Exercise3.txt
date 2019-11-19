@@ -1,0 +1,2 @@
+Create linked list library with functions (ListAdd(), ListIs(), ListRemove()).
+New elements in list should be dynamically allocated.
