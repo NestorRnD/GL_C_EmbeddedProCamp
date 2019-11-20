@@ -1,92 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-#define TLISTDATA int
+#include "mylist.h"
 
-struct TList{
-    TLISTDATA data;
-    struct TList *ptrNext;
-};
-
-typedef struct TList *TptrList;
-
-TptrList ListAdd(TptrList *link, TptrList elem)
-{
-    if(elem!=NULL){
-	elem->ptrNext=*link;
-	*link=elem;
-    }
-    return elem;
-}
-
-void ListRemove(TptrList *link, void (*fddel)(TLISTDATA))
-{
-    TptrList pL=(*link);
-    if(pL!=NULL){
-	if(fddel!=NULL)
-	    fddel(pL->data);
-	*link=pL->ptrNext;
-	free(pL);
-    }
-}
-
-void ListDestroy(TptrList *head, void (*fddel)(TLISTDATA))
-{
-    while((*head)!=NULL)
-	ListRemove(head,fddel);
-}
-
-TptrList ListCreate(TLISTDATA d, TLISTDATA (*fdassign)(const TLISTDATA))
-{
-    TptrList p;
-    p=malloc(sizeof(struct TList));
-    if(p!=NULL){
-	p->ptrNext=NULL;
-	if(fdassign!=NULL)
-	    p->data=fdassign(d);
-	else
-	    p->data=d;
-    }
-    return p;
-}
-
-TptrList ListLast(TptrList head)
-{
-    if(head!=NULL)
-	while((head->ptrNext)!=NULL)
-	    head=head->ptrNext;
-    return head;
-}
-
-void ListIterate(const TptrList head, TLISTDATA (*fdapply)(TLISTDATA))
-{
-    TptrList p=head;
-    while((p != NULL) && (fdapply!=NULL)){
-	p->data=fdapply(p->data);
-	p=p->ptrNext;
-    }
-}
-
-//!!!!!!!!!!!!!!
-TptrList *ListFind(const TptrList head, int );
 
 TLISTDATA PrintData(TLISTDATA d)
 {
-    printf(" -> %i",d);
+    printf("->[%i]",d);
     return d;
 }
 
 
 void ListPrint(TptrList head)
 {
-    printf("List is:\nHead ");
+    printf("List is: Head");
     ListIterate(head,PrintData);
-    printf(" -> NULL\n");
+    printf("->NULL\n");
 }
 
 static int Sum;
 
-TLISTDATA CalcSum(TLISTDATA d)
+int CalcSum(int d)
 {
     Sum+=d;
     return d;
@@ -99,27 +32,72 @@ int SumOfElems(TptrList head)
     return Sum;
 }
 
+
+int insCrit(int data, int param){
+    return data<param;
+}
+
+
+#define TOPINSERT(elem) 	ListAdd(&Head,ListCreate(elem))
+#define LASTINSERT(elem)	{TptrList *pL=ListLast(&Head);\
+				ListAdd((*pL==NULL)?pL:&((*pL)->ptrNext),ListCreate(elem));}
+#define ORDERINSERT(elem)	ListAdd(ListFind(&Head,insCrit,elem),ListCreate(elem))
+
 int main(void)
 {
-    TptrList Head=NULL,pL;
+    TptrList Head=NULL;
 
     ListPrint(Head);
 
-    Head=ListCreate(10,NULL);
+    printf("Insert 10 in tail.\n");
+    LASTINSERT(10);
     ListPrint(Head);
 
-    pL=ListCreate(5,NULL);
-    ListAdd(&Head,pL);
+    printf("Insert 5 in top.\n");
+    TOPINSERT(5);
     ListPrint(Head);
 
-    ListAdd(
-	&(ListLast(Head)->ptrNext),
-	ListCreate(15,NULL));
+    printf("Insert 15 in tail.\n");
+    LASTINSERT(15);
     ListPrint(Head);
 
-    printf("Sum of elems equal %i",SumOfElems(Head));
+    printf("Insert 7.\n");
+    ORDERINSERT(7);
+    ListPrint(Head);
 
-    ListDestroy(&Head,NULL);
+    printf("Insert 12.\n");
+    ORDERINSERT(12);
+    ListPrint(Head);
+
+    printf("Insert 1.\n");
+    ORDERINSERT(1);
+    ListPrint(Head);
+
+    printf("Sum of all elems is equal to %i\n",SumOfElems(Head));
+
+    printf("Remove first element.\n");
+    ListRemove(&Head);
+    ListPrint(Head);
+
+    printf("Remove last element.\n");
+    ListRemove(ListLast(&Head));
+    ListPrint(Head);
+
+    printf("Remove first element that >=7.\n");
+    ListRemove(ListFind(&Head,insCrit,7));
+    ListPrint(Head);
+
+    printf("Remove first element that >=7.\n");
+    ListRemove(ListFind(&Head,insCrit,7));
+    ListPrint(Head);
+
+    printf("Destroy list.\n");
+    ListDestroy(&Head);
+    ListPrint(Head);
+
+    printf("Try to remove first element.\n");
+    ListRemove(&Head);
+    ListPrint(Head);
 
     return 0;
 }
