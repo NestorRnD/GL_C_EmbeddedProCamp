@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+/*
+ *
+ */
 double read_param(const char *msg)
 {
     double res=0;
@@ -33,9 +36,9 @@ int main(void)
 	    printf("\t>>> Height mast be positive.\n");
     }while(h<0);
     do{
-	w=read_param("Enter weight (m): ");
+	w=read_param("Enter width (m): ");
 	if(w<0)
-	    printf("\t>>> Weight mast be positive.\n");
+	    printf("\t>>> Width mast be positive.\n");
     }while(w<0);
     printf("Results:\n"
 	   "\tPerimeter (in inches) is %lg\n"

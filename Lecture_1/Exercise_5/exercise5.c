@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-uint64_t factorial(uint8_t n){
+uint64_t factorial(uint8_t n)
+{
     uint64_t prod=1;
     if(n>22){
 	fprintf(stderr,"Error: Can't calculate factorial of %d. The result is to big.\n",n);
@@ -14,7 +15,8 @@ uint64_t factorial(uint8_t n){
 
 #define PRINTFACTORIAL(k) printf("%d! = %lu\n",k,factorial(k))
 
-int main(void){
+int main(void)
+{
     PRINTFACTORIAL(10);
 /*
     PRINTFACTORIAL(20);

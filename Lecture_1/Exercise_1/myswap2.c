@@ -38,7 +38,8 @@ uint64_t swap64(uint64_t source)
 
 #include <stdio.h>
 
-int main(void){
+int main(void)
+{
     union{
 	uint16_t u16;
 	uint32_t u32;

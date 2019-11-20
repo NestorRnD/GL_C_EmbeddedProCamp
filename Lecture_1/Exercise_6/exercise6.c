@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-int main(void){
+int main(void)
+{
     char *buff=NULL,*p=NULL,lch;
     uint16_t n,i;
     long int inp;
