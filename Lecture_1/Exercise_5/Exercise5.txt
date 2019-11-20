@@ -1,1 +1,0 @@
-Write a C program to compute factorial of 10

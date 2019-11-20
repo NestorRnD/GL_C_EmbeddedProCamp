@@ -1,1 +1,0 @@
-Write a C program to print all numbers between 1 to 500 which divided by a number specified by user;
