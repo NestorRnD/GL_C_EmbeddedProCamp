@@ -1,0 +1,4 @@
+Create queue library based on array:
+- int Put(int);              // add element
+- int Get(*int);             // read element and remove from queue
+- Int Read(*int);          // read element without removing it from stack

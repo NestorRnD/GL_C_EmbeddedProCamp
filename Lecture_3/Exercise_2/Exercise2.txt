@@ -1,0 +1,4 @@
+Create stack library based on linked list:
+- int Push(int);    // add element
+- int Pop(*int);    // read element and remove from stack
+- int Read(*int);  // read element without removing it from stack
