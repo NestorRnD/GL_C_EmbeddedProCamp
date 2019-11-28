@@ -3,7 +3,8 @@
 
 /*
  * Function for copy strings from src to dest but no more then size-1 chars.
- * The dest string always ended with '\0'
+ * Dest must point at allocated memory block (staticaly or dynamicaly).
+ * The dest string always ended with '\0'.
  */
 void myStrCp8(char *dest, const char *src, size_t size)
 {
@@ -12,7 +13,7 @@ void myStrCp8(char *dest, const char *src, size_t size)
 	*dest=*src;
 	dest++;
 	src++;
-/*/ or all three commands in one line
+/*/ //or all three commands in one line
 	 *(dest++)=*(src++);
 //*/
 	size--;
