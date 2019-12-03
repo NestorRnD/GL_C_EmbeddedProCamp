@@ -1,0 +1,4 @@
+This is not homework exercise.
+It is my first attempt to using stm32f3discovery board.
+
+My play with leds.
