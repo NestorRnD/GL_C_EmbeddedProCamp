@@ -48,7 +48,7 @@ int main(void)
     // Enable CLK for port E 
     RCC -> AHBENR |= RCC_AHBENR_GPIOEEN;
 
-    // Enable PORTE pin 8 as digital output
+    // Enable PORTE pins as digital output
     for(i=0;i<NLEDS;i++)
 	mask|=3<<(((ALEDS>>(i<<2))&0xF)<<1);
     GPIOE->MODER &= ~mask;
