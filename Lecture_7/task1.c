@@ -10,7 +10,7 @@ static inline void RandNextTask(){
     pt_task_flags=rand()%NTASKS+1;
 }
 
-static int myThread1(struct pt *pt)
+static PT_THREAD(myThread1(struct pt *pt))
 {
   PT_BEGIN(pt);
 
@@ -23,7 +23,7 @@ static int myThread1(struct pt *pt)
   PT_END(pt);
 }
 
-static int myThread2(struct pt *pt)
+static PT_THREAD(myThread2(struct pt *pt))
 {
   PT_BEGIN(pt);
 
@@ -36,7 +36,7 @@ static int myThread2(struct pt *pt)
   PT_END(pt);
 }
 
-static int myThread3(struct pt *pt)
+static PT_THREAD(myThread3(struct pt *pt))
 {
   PT_BEGIN(pt);
 
@@ -49,7 +49,7 @@ static int myThread3(struct pt *pt)
   PT_END(pt);
 }
 
-static int myThread4(struct pt *pt)
+static PT_THREAD(myThread4(struct pt *pt))
 {
   PT_BEGIN(pt);
 

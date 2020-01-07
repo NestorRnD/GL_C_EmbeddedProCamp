@@ -1,3 +1,7 @@
 CFLAGS=-O -Wuninitialized -Werror
 
-task1: task1.c pt.h lc.h
+all: task1 task2
+
+%: %.c pt.h lc.h
+
+#task2: task2.c pt.h lc.h
