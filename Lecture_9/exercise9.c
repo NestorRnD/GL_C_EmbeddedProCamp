@@ -39,7 +39,7 @@ void vInitAll()
     GPIOE->MODER |= mask;
 }
 
-void myDelay(uint32_t n)
+void myDelay(uint32_t n) // This function is only for priority demonstration (led will blink only for task with max priority)
 {
     volatile uint32_t i;
     for(i=n;i>0;i--)
@@ -63,16 +63,17 @@ void vLedTask (void *pvParameters)
     vTaskDelete(NULL);
 }
 
-void ErrorTask ()
+void ErrorTask (int n)
 {
     uint32_t i,leds=0;
 
     for(i=0;i<NLEDS;i++)
 	leds |= 1<<((ALEDS>>(i<<2))&0xF);
 
-    while(1) {
+    while(n>0) {
 	GPIOE -> ODR ^= leds;
 	myDelay(1000000);
+	n--;
     }
 }
 
@@ -87,7 +88,10 @@ void vButtonTask (void *pvParameters)
 		ledIndex=LedsBlink++;
 		ret=xTaskCreate(vLedTask, (char*)"LedTask", configMINIMAL_STACK_SIZE,
 			&ledIndex, tskIDLE_PRIORITY+LedsBlink, NULL);
-		if(ret!=pdPASS) ErrorTask();
+		if(ret!=pdPASS){
+		    ErrorTask(6);
+		    LedsBlink--;
+		}
 	    }
 	    taskEXIT_CRITICAL();
 	    vTaskDelay(200);
@@ -102,10 +106,10 @@ int main ()
     vInitAll();
 
     ret=xTaskCreate(vButtonTask, (char*)"ButtonTask", configMINIMAL_STACK_SIZE, NULL, 10, NULL);
-    if(ret!=pdPASS)
-	ErrorTask();
-    else
+    if(ret==pdPASS)
 	vTaskStartScheduler();
+    while(1)
+	ErrorTask(10);
 }
 
 void vApplicationIdleHook( void ){
