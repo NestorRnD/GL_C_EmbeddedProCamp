@@ -15,44 +15,52 @@ FLASH=./myflash
 CMSISINC=-I ./CMSIS_inc
 FRTOSINC=-I ./FRTOS_inc -I./FRTOS_port
 
-CMSISOBJs= obj/system_stm32f30x.o obj/startup_stm32f30x.o obj/stm32f30x_gpio.o obj/stm32f30x_rcc.o
+OBJDIR= obj
 
-FRTOSOBJs= obj/port.o obj/tasks.o obj/croutine.o \
-    obj/event_groups.o obj/heap_4.o obj/list.o \
-    obj/queue.o obj/stream_buffer.o obj/timers.o
+tCMSISOBJs= system_stm32f30x.o startup_stm32f30x.o stm32f30x_gpio.o stm32f30x_rcc.o
 
+tFRTOSOBJs= port.o tasks.o croutine.o event_groups.o heap_4.o list.o \
+    queue.o stream_buffer.o timers.o
 
-test_frtos.elf: obj/test_frtos.o $(CMSISOBJs) $(FRTOSOBJs)
+CMSISOBJs= $(addprefix $(OBJDIR)/, $(tCMSISOBJs))
+FRTOSOBJs= $(addprefix $(OBJDIR)/, $(tFRTOSOBJs))
+
+exercise9.elf: $(OBJDIR)/exercise9.o $(CMSISOBJs) $(FRTOSOBJs)
 	$(LINK) -o $@ $^
 	chmod -x $@
 
 clean:
-	rm *.elf
-	rm *.hex
-	rm obj/*.o
+	-rm $(OBJDIR)/*.o
+	-rm *.elf
+	-rm *.hex
 
-flash: test_frtos.hex
+flash: exercise9.hex
 	$(FLASH) $^
 
+$(CMSISOBJs): | $(OBJDIR)
+$(FRTOSOBJs): | $(OBJDIR)
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
 
 #=======================================================
 
-obj/%.o: %.c
+$(OBJDIR)/%.o: %.c | $(OBJDIR)
 	$(CC) $(CMSISINC) $(FRTOSINC) -c $^ -o $@
 
 %.hex: %.elf
 	$(OBJCP) $^ $@
 
-obj/%.o: CMSIS_src/%.c
+$(OBJDIR)/%.o: CMSIS_src/%.c
 	$(CC) $(CMSISINC) -c $^ -o $@
 
 
-obj/%.o: CMSIS_src/%.s
+$(OBJDIR)/%.o: CMSIS_src/%.s
 	$(CC) $(CMSISINC) -c $^ -o $@
 
-obj/%.o: FRTOS_src/%.c
+$(OBJDIR)/%.o: FRTOS_src/%.c
 	$(CC) $(CMSISINC) $(FRTOSINC) -c $^ -o $@
 
-obj/%.o: FRTOS_port/%.c
+$(OBJDIR)/%.o: FRTOS_port/%.c
 	$(CC) $(CMSISINC) $(FRTOSINC) -c $^ -o $@
 
