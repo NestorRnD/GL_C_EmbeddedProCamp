@@ -17,7 +17,7 @@ FRTOSINC=-I ./FRTOS_inc -I./FRTOS_port
 
 OBJDIR= obj
 
-tCMSISOBJs= system_stm32f30x.o startup_stm32f30x.o stm32f30x_gpio.o stm32f30x_rcc.o
+tCMSISOBJs= system_stm32f30x.o startup_stm32f30x.o stm32f30x_gpio.o stm32f30x_rcc.o stm32f30x_usart.o
 
 tFRTOSOBJs= port.o tasks.o croutine.o event_groups.o heap_4.o list.o \
     queue.o stream_buffer.o timers.o
@@ -25,7 +25,7 @@ tFRTOSOBJs= port.o tasks.o croutine.o event_groups.o heap_4.o list.o \
 CMSISOBJs= $(addprefix $(OBJDIR)/, $(tCMSISOBJs))
 FRTOSOBJs= $(addprefix $(OBJDIR)/, $(tFRTOSOBJs))
 
-exercise12.elf: $(OBJDIR)/exercise12.o $(CMSISOBJs) $(FRTOSOBJs)
+exercise12.elf: $(OBJDIR)/exercise12.o $(OBJDIR)/myusart.o $(CMSISOBJs) $(FRTOSOBJs)
 	$(LINK) -o $@ $^
 	chmod -x $@
 
@@ -53,7 +53,6 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR)
 
 $(OBJDIR)/%.o: CMSIS_src/%.c
 	$(CC) $(CMSISINC) -c $^ -o $@
-
 
 $(OBJDIR)/%.o: CMSIS_src/%.s
 	$(CC) $(CMSISINC) -c $^ -o $@

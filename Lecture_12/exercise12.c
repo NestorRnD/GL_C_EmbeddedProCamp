@@ -7,6 +7,8 @@
 
 #include <stm32f30x.h>
 
+#include "myusart.h"
+
 // Number of philosophers
 #define N 8
 
@@ -15,6 +17,17 @@
 
 uint32_t aLeds[]={9,10,11,12,13,14,15,8};
 uint8_t aPhs[]={0,1,2,3,4,5,6,7};
+
+char *strTaskNames[]={
+	"Ph1",
+	"Ph2",
+	"Ph3",
+	"Ph4",
+	"Ph5",
+	"Ph6",
+	"Ph7",
+	"Ph8"
+    };
 
 void vInitAll()
 {
@@ -35,7 +48,7 @@ void vInitAll()
     GPIOE->MODER |= mask;
 }
 
-void vErrorTask (int n)
+void ErrorBlink (int n)
 {
     uint32_t i,leds=0;
 
@@ -58,7 +71,7 @@ void CreateMutexes(void)
     for(i=0;i<N;i++){
 	aForksMtx[i]=xSemaphoreCreateMutex();
 	if(aForksMtx[i]==NULL)
-	    while(1) vErrorTask(10);
+	    while(1) ErrorBlink(10);
     }
 }
 
@@ -74,12 +87,16 @@ void vPhilosophTask (void *pvParameter)
 
     while(1){
 	wait=rand()%500+200;
+	usart1_puts(strTaskNames[fork_l]);
+	usart1_puts(" T\n"); //Думае
 	vTaskDelay(wait);
 	while(1){
 	    if(xSemaphoreTake(aForksMtx[fork_l],(TickType_t)1000)==pdTRUE) {
 		if(xSemaphoreTake(aForksMtx[fork_r],(TickType_t)500)==pdTRUE) {
 		    wait=rand()%300+200;
 		    GPIOE->ODR |= leds;
+		    usart1_puts(strTaskNames[fork_l]);
+		    usart1_puts(" E\n"); // Їсть
 		    vTaskDelay(wait);
 		    GPIOE->ODR &= ~leds;
 		    xSemaphoreGive(aForksMtx[fork_r]);
@@ -88,41 +105,34 @@ void vPhilosophTask (void *pvParameter)
 		}
 		xSemaphoreGive(aForksMtx[fork_l]);
 	    } else {
-		// Philisopher die
-		while(1) vErrorTask(10);
+		usart1_puts(strTaskNames[fork_l]);
+		usart1_puts(" D!!!\n"); // Помер з голоду
+		while(1) ErrorBlink(10);
 	    }
 	}
     }
     vTaskDelete(NULL);
 }
 
-char *strTaskNames[]={
-	"Ph1",
-	"Ph2",
-	"Ph3",
-	"Ph4",
-	"Ph5",
-	"Ph6",
-	"Ph7",
-	"Ph8"
-    };
 
 int main ()
 {
     uint32_t i;
     BaseType_t ret;
-
+    char *Name="Philosopher?";
     vInitAll();
+    usart1_init();
+
     CreateMutexes();
 
+    usart1_puts("Start\n");
     for(i=0;i<N;i++){
-	ret=xTaskCreate(vPhilosophTask, strTaskNames[i], configMINIMAL_STACK_SIZE, (void *)(aPhs+i), tskIDLE_PRIORITY+1, NULL);
+	ret=xTaskCreate(vPhilosophTask, strTaskNames[i],
+		configMINIMAL_STACK_SIZE, (void *)(aPhs+i), tskIDLE_PRIORITY+1, NULL);
 	if(ret!=pdPASS)break;
     }
-
     if(ret==pdPASS)
 	vTaskStartScheduler();
-
     while(1)
-	vErrorTask(10);
+	ErrorBlink(10);
 }
