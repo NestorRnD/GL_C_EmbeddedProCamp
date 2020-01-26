@@ -3,7 +3,8 @@
 
 TptrList ListAdd(TptrList *link, TptrList elem)
 {
-    if( elem != NULL ){
+    if( link==NULL ) return NULL;
+    if( elem!=NULL ){
 	elem->ptrNext=*link;
 	*link=elem;
     }
@@ -12,8 +13,9 @@ TptrList ListAdd(TptrList *link, TptrList elem)
 
 void ListRemove(TptrList *link)
 {
+    if( link==NULL ) return;
     TptrList pL=(*link);
-    if( pL != NULL ){
+    if( pL!=NULL ){
 	*link=pL->ptrNext;
 	free(pL);
     }
@@ -21,7 +23,8 @@ void ListRemove(TptrList *link)
 
 void ListDestroy(TptrList *link)
 {
-    while( (*link) != NULL )
+    if( link==NULL ) return;
+    while( (*link)!=NULL )
 	ListRemove(link);
 }
 
@@ -29,7 +32,7 @@ TptrList ListCreate(TLISTDATA d)
 {
     TptrList p;
     p=malloc(sizeof(struct TList));
-    if( p != NULL ){
+    if( p!=NULL ){
 	p->ptrNext=NULL;
 	p->data=d;
     }
@@ -38,22 +41,23 @@ TptrList ListCreate(TLISTDATA d)
 
 TptrList *ListLast(TptrList *link)
 {
-    if( (*link) != NULL )
-	while(((*link)->ptrNext)!=NULL)
+    if( (link!=NULL) && ((*link)!=NULL) )
+	while( ((*link)->ptrNext)!=NULL )
 	    link=&((*link)->ptrNext);
     return link;
 }
 
 void ListIterate(TptrList head, TLISTDATA (*fdApply)(TLISTDATA))
 {
-    while((head != NULL) && (fdApply != NULL)){
+    while( (head!=NULL) && (fdApply!=NULL) ){
 	head->data=fdApply(head->data);
 	head=head->ptrNext;
     }
 }
 
 TptrList *ListFind(TptrList *link, int (*criteria)(TLISTDATA,TLISTDATA), TLISTDATA param){
-    while( ((*link) != NULL) && (criteria((*link)->data,param)) )
-	link=&((*link)->ptrNext);
+    if( link!=NULL )
+	while( ((*link)!=NULL) && (criteria((*link)->data,param)) )
+	    link=&((*link)->ptrNext);
     return link;
 }
