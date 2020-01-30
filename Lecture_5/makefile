@@ -15,7 +15,7 @@ FLASH=./myflash
 
 INC_PATH=./h
 
-usart_test.elf: usart_test.o system_stm32f30x.o startup_stm32f30x.o
+usart_test.elf: usart_test.o system_stm32f30x.o startup_stm32f30x.o myusart_cms.o
 	$(LINK) -o $@ $^
 	chmod -x $@
 
