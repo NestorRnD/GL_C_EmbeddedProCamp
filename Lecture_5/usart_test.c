@@ -32,16 +32,26 @@ int main(void)
 
     GPIOE->ODR &= ~mask;
 
+//
     usart1_init(115200);
-//    usart1_init(9600);
+/*/
+    usart1_init(9600);
+//*/
     usart1_open();
 
     while (1){
 	while(!usart1_read(&data))
 		__asm__("nop");;
 	while(!usart1_write(data)); // Echo char
-	if(data=='0') GPIOE->ODR &= ~mask; // off all leds
 	if( (data>'0')&&(data<'9') )
 	    GPIOE->ODR ^= 1<<aLeds[data-'1'];
+	else switch(data){
+	    case '0':
+		GPIOE->ODR &= ~mask; // off all leds
+		break;
+	    case 'i':
+		GPIOE->ODR ^= mask; // inverse all leds
+		break;
+	}
     }
 }
