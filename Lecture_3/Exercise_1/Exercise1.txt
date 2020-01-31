@@ -1,0 +1,1 @@
+Create void function that copies one string to another. 

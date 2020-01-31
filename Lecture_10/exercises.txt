@@ -1,0 +1,2 @@
+1. Create project to demonstrate static memory allocation.
+2. Create project to demonstrate dynamic memory allocation.
