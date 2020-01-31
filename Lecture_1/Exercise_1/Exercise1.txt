@@ -1,1 +1,0 @@
-Write swap16, swap32, swap64 functions that swap, bytes in uint16_t, unit32_t, and uint64_t.
